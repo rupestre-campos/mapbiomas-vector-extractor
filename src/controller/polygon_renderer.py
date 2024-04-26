@@ -13,7 +13,7 @@ class PolygonRenderer:
         return ReadCOG(float_precision=app_config_data.float_precision)
 
     def render_mapbiomas(self, params):
-        geom = params.get("feature_geojson")
+        geom = params.get("feature_geojson").get("geometry")
         geom_area = self.cog_reader.area_ha(geom)
         if geom_area > app_config_data.max_polygon_clip_area_ha:
             raise ValueError(f"Polygon area (ha) cannot be greater than {app_config_data.max_polygon_clip_area_ha}")

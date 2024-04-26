@@ -27,7 +27,7 @@ def mapbiomas_clip(image_url,feature_geojson):
 
 def create_download_button(polygons_data, name, file_name):
     file_name_sufix = file_name.split(".")[0]
-    ste.download_button(
+    st.download_button(
         label="Download vector data",
         data = json.dumps(polygons_data, indent=4, ensure_ascii=False),
         file_name = f"mapbiomas_{name}_{file_name_sufix}.geojson",
