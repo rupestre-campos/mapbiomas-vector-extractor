@@ -25,14 +25,14 @@ def test_init_read_stac():
     image_renderer = PolygonRenderer()
     assert isinstance(image_renderer, PolygonRenderer)
 
-def test_render_mosaic(mocker, feature_geojson, sample_data_url):
+def test_render_mapbiomas(mocker, feature_geojson, sample_data_url):
     mocker.patch(
         "model.read_cog.ReadCOG.render_mapbiomas_from_cog",
         return_value=feature_geojson
     )
     polygon_renderer = PolygonRenderer()
     params = {
-            "feature_geojson": feature_geojson,
+            "feature_geojson": {"geometry":feature_geojson},
             "src_path": sample_data_url,
             "classes_names": mapbiomas_classes,
             "max_size": None
@@ -41,14 +41,14 @@ def test_render_mosaic(mocker, feature_geojson, sample_data_url):
     polygons = polygon_renderer.render_mapbiomas(params)
     assert isinstance(polygons, type(feature_geojson))
 
-def test_render_mosaic_error(mocker, big_feature_geojson, sample_data_url):
+def test_render_mapbiomas_error(mocker, big_feature_geojson, sample_data_url):
     mocker.patch(
         "model.read_cog.ReadCOG.render_mapbiomas_from_cog",
         return_value=feature_geojson
     )
     polygon_renderer = PolygonRenderer()
     params = {
-            "feature_geojson": big_feature_geojson,
+            "feature_geojson": {"geometry":big_feature_geojson},
             "src_path": sample_data_url,
             "classes_names": mapbiomas_classes,
             "max_size": None

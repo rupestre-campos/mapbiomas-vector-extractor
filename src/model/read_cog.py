@@ -1,4 +1,5 @@
 import pyproj
+import numpy as np
 from rasterio import warp
 from rio_tiler.io import COGReader
 from rasterio.features import shapes
@@ -56,8 +57,10 @@ class ReadCOG:
                            0.0, -pixel_size_y, max_y)
         return transform
 
-    def get_polygons(self, image_data, transform, classes_names):
-        image_shapes = shapes(image_data.astype('uint8'), transform=transform)
+    def get_polygons(self, image, mask, transform, classes_names):
+        mask_expanded = np.expand_dims(mask, axis=0)
+
+        image_shapes = shapes(image.astype('uint8'), mask=mask_expanded, transform=transform)
         features = []
 
         for image_shape in image_shapes:
@@ -93,8 +96,9 @@ class ReadCOG:
         transform = self.get_transform(image_bounds, image_data.width, image_data.height)
 
         features = self.get_polygons(
-            image_data.data,
-            transform,
+            image=image_data.data,
+            mask=image_data.mask,
+            transform=transform,
             classes_names=params.get("classes_names")
         )
 
