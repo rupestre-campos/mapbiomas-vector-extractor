@@ -1,3 +1,4 @@
+[![Python application](https://github.com/rupestre-campos/mapbiomas-vector-extractor/actions/workflows/python-app.yml/badge.svg)](https://github.com/rupestre-campos/mapbiomas-vector-extractor/actions/workflows/python-app.yml)
 
 # Mapbiomas  Vector Extractor
 Simple app to upload a geojson and get Mapbiomas (Brazil) data as vector
