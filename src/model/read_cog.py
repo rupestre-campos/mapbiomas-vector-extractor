@@ -5,7 +5,7 @@ from rio_tiler.io import COGReader
 from rasterio.features import shapes
 from rasterio.transform import Affine
 from shapely.ops import transform
-from shapely.geometry import shape
+from shapely.geometry import shape, mapping
 
 
 class ReadCOG:
@@ -57,25 +57,31 @@ class ReadCOG:
                            0.0, -pixel_size_y, max_y)
         return transform
 
-    def get_polygons(self, image, mask, transform, classes_names):
+    def get_polygons(self, feature_geojson, image, mask, transform, classes_names):
         mask_expanded = np.expand_dims(mask, axis=0)
 
         image_shapes = shapes(image.astype('uint8'), mask=mask_expanded, transform=transform)
+        feature_geometry = shape(feature_geojson['geometry'])
+
         features = []
 
         for image_shape in image_shapes:
             pixel_value = int(image_shape[1])
             geom = image_shape[0]
-            area = self.area_ha(geom)
+            image_geometry = shape(geom)
+            intersection = image_geometry.intersection(feature_geometry)
+            if intersection:
+                intersection = mapping(intersection)
+                area = self.area_ha(intersection)
 
-            properties = {"pixel_value":pixel_value, "area_ha": round(area/10_000, self.float_precision)}
-            properties.update(classes_names[pixel_value])
-            feature = {
-                "type": "Feature",
-                "geometry": image_shape[0],
-                "properties": properties
-            }
-            features.append(feature)
+                properties = {"pixel_value":pixel_value, "area_ha": round(area/10_000, self.float_precision)}
+                properties.update(classes_names[pixel_value])
+                feature = {
+                    "type": "Feature",
+                    "geometry": intersection,
+                    "properties": properties
+                }
+                features.append(feature)
         feat_collection = {
             "type": "FeatureCollection",
             "features": features
@@ -83,8 +89,9 @@ class ReadCOG:
         return feat_collection
 
     def render_mapbiomas_from_cog(self, params):
-        args = (params.get("feature_geojson"), )
-        if not args[0]:
+        feature_geojson = params.get("feature_geojson")
+        args = (feature_geojson, )
+        if not feature_geojson:
             return {}
 
         kwargs = {
@@ -96,6 +103,7 @@ class ReadCOG:
         transform = self.get_transform(image_bounds, image_data.width, image_data.height)
 
         features = self.get_polygons(
+            feature_geojson=feature_geojson,
             image=image_data.data,
             mask=image_data.mask,
             transform=transform,
