@@ -22,7 +22,11 @@ def mapbiomas_clip(image_url,feature_geojson):
         "classes_names": mapbiomas_classes,
         "max_size": None
     }
-    polygons = worker_image_renderer.render_mapbiomas(params)
+    try:
+        polygons = worker_image_renderer.render_mapbiomas(params)
+    except ValueError as e:
+        st.write(f"Polygon area must be smaller than {app_config_data.max_polygon_clip_area_ha}ha")
+        return {}
     return polygons
 
 def create_download_button(polygons_data, name, file_name):
