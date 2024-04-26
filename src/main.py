@@ -26,7 +26,7 @@ def mapbiomas_clip(image_url,feature_geojson):
     polygons = worker_image_renderer.render_mapbiomas(params)
     if "error" in polygons:
         st.write(
-            f"Polygon area ({polygons.get('area_ha')}) must be smaller than {app_config_data.max_polygon_clip_area_ha}ha")
+            f"Polygon area ({polygons.get('area_ha')}ha) must be smaller than {app_config_data.max_polygon_clip_area_ha}ha")
         return {}
 
     return polygons

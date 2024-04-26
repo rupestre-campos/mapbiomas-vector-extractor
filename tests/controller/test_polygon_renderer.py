@@ -53,5 +53,6 @@ def test_render_mapbiomas_error(mocker, big_feature_geojson, sample_data_url):
             "classes_names": mapbiomas_classes,
             "max_size": None
     }
-    with pytest.raises(ValueError):
-        polygons = polygon_renderer.render_mapbiomas(params)
+
+    polygons = polygon_renderer.render_mapbiomas(params)
+    assert "error" in polygons
