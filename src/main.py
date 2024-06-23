@@ -42,12 +42,9 @@ def create_download_button(polygons_data, name, file_name):
 
 def main():
     st.title("Mapbiomas Vector Extractor")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.write("Upload your polygon as .geojson to get mapbiomas data as vector")
-        st.write(f"Maximum area allowed: {app_config_data.max_polygon_clip_area_ha}ha")
-    with col3:
-        st.write("[Code on GitHub](https://github.com/rupestre-campos/mapbiomas-vector-extractor)")
+
+    st.write("Upload your polygon as .geojson to get mapbiomas data as vector")
+    st.write(f"Maximum area allowed: {app_config_data.max_polygon_clip_area_ha}ha")
 
     uploaded_file = st.file_uploader("Choose a geojson file", type="geojson")
 
