@@ -74,7 +74,7 @@ class ReadCOG:
                 intersection = mapping(intersection)
                 area = self.area_ha(intersection)
 
-                properties = {"pixel_value":pixel_value, "area_ha": round(area/10_000, self.float_precision)}
+                properties = {"pixel_value":pixel_value, "area_ha": area}
                 properties.update(classes_names[pixel_value])
                 feature = {
                     "type": "Feature",
