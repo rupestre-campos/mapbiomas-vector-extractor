@@ -83,7 +83,7 @@ def plot_map(polygons, input_polygon):
     web_map = folium.Map(location=[0, 0], zoom_start=2, tiles=None)
 
     input_polygon_group = folium.FeatureGroup(name="Input Polygon")
-    features_group = folium.FeatureGroup(name="GeoJSON Polygons")
+    features_group = folium.FeatureGroup(name="Mabiomas")
 
     features = folium.GeoJson(
         polygons,
