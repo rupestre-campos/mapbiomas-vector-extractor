@@ -1,7 +1,10 @@
 [runner]
 
 # Default: true
-fastReruns = false
+fastReruns = true
 
 [theme]
 base = "dark"
+
+[server]
+maxUploadSize = 2

@@ -1,5 +1,3 @@
-from controller.environment_variable_manager import EnvContextManager
-
 from model.read_cog import ReadCOG
 from app_config import AppConfig
 app_config_data = AppConfig()
