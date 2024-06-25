@@ -80,7 +80,7 @@ def highlight_function(feature):
 
 def plot_map(polygons, input_polygon):
 
-    web_map = folium.Map(location=[0, 0], zoom_start=2)
+    web_map = folium.Map(location=[0, 0], zoom_start=2, tiles=None)
 
     input_polygon_group = folium.FeatureGroup(name="Input Polygon")
     features_group = folium.FeatureGroup(name="GeoJSON Polygons")
@@ -118,6 +118,10 @@ def plot_map(polygons, input_polygon):
     bounds = features.get_bounds()
     web_map.fit_bounds(bounds, padding=(30, 30))
 
+    web_map = add_base_map(web_map, app_config_data.google_basemap, "google satellite", "google", show=True)
+    web_map = add_base_map(web_map, app_config_data.open_street_maps, "open street maps", "open street maps")
+    web_map = add_base_map(web_map, app_config_data.esri_basemap, "esri satellite", "esri")
+
     folium.LayerControl().add_to(web_map)
 
     st_folium(
@@ -125,6 +129,18 @@ def plot_map(polygons, input_polygon):
         use_container_width=True,
         returned_objects=[]
     )
+
+def add_base_map(web_map, tile_url, name, attribution, max_zoom=30, max_native_zoom=18, show=False):
+    folium.raster_layers.TileLayer(
+        name=name,
+        tiles=tile_url,
+        attr=attribution,
+        max_zoom=max_zoom,
+        max_native_zoom=max_native_zoom,
+        show=show,
+        overlay=False
+    ).add_to(web_map)
+    return web_map
 
 def parse_input_file(string_data):
     try:
