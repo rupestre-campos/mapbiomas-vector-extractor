@@ -57,7 +57,7 @@ class ReadCOG:
                            0.0, -pixel_size_y, max_y)
         return transform
 
-    def get_polygons(self, feature_geojson, image, mask, transform, classes_names):
+    def get_polygons(self, feature_geojson, image, mask, transform, classes_names, year):
         mask_expanded = np.expand_dims(mask, axis=0)
 
         image_shapes = shapes(image.astype('uint8'), mask=mask_expanded, transform=transform)
@@ -70,18 +70,19 @@ class ReadCOG:
             geom = image_shape[0]
             image_geometry = shape(geom)
             intersection = image_geometry.intersection(feature_geometry)
-            if intersection:
-                intersection = mapping(intersection)
-                area = self.area_ha(intersection)
 
-                properties = {"pixel_value":pixel_value, "area_ha": area}
-                properties.update(classes_names[pixel_value])
-                feature = {
-                    "type": "Feature",
-                    "geometry": intersection,
-                    "properties": properties
-                }
-                features.append(feature)
+            intersection = mapping(intersection)
+            area = self.area_ha(intersection)
+
+            properties = {"pixel_value":pixel_value, "area_ha": area, "year": year}
+            properties.update(classes_names[pixel_value])
+            feature = {
+                "type": "Feature",
+                "geometry": intersection,
+                "properties": properties
+            }
+            features.append(feature)
+
         feat_collection = {
             "type": "FeatureCollection",
             "features": features
@@ -107,7 +108,8 @@ class ReadCOG:
             image=image_data.data,
             mask=image_data.mask,
             transform=transform,
-            classes_names=params.get("classes_names")
+            classes_names=params.get("classes_names"),
+            year=params.get("year")
         )
 
         return features
